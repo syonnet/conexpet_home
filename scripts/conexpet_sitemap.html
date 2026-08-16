@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #FFFFFF;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+}
+#mindmap { padding: 60px 80px; display: inline-block; min-width: 100%; position: relative; }
+#mindmap > svg.lines {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+}
+
+/* Intent: technical */
+#mindmap[data-intent="technical"] .root-node {
+  background: linear-gradient(135deg, #1E3A5F, #2D4A6F);
+  box-shadow: 0 4px 12px rgba(30,58,95,0.25);
+}
+
+.root-node {
+  color: white; font-size: 22px; font-weight: 700;
+  padding: 20px 36px; border-radius: 14px;
+  white-space: nowrap; flex-shrink: 0; align-self: center;
+  letter-spacing: 0.5px;
+}
+
+/* Container Layout */
+.lr-tree { display: flex; align-items: center; gap: 0; position: relative; }
+.lr-tree .root-node {
+  padding: 22px 38px; border-radius: 14px;
+  margin: 0 70px; text-align: center;
+}
+.sub-branch { display: flex; align-items: flex-start; gap: 0; }
+
+/* Left-Right Expanding Layout */
+.left-branches { display: flex; flex-direction: column; gap: 18px; }
+.left-branch { display: flex; align-items: flex-start; flex-direction: row-reverse; gap: 0; }
+.left-branch .children {
+  display: flex; flex-direction: column; gap: 6px;
+  margin-right: 52px; align-items: flex-end;
+}
+.left-branch .children:has(.sub-branch) { gap: 12px; }
+.left-branch .sub-branch .children {
+  gap: 5px; margin-right: 44px; margin-left: 0; align-items: flex-end;
+}
+.left-branch .sub-branch { flex-direction: row-reverse; }
+
+.right-branches { display: flex; flex-direction: column; gap: 18px; }
+.right-branch { display: flex; align-items: flex-start; gap: 0; }
+.right-branch .children {
+  display: flex; flex-direction: column; gap: 6px; margin-left: 52px; align-items: flex-start;
+}
+.right-branch .children:has(.sub-branch) { gap: 12px; }
+.right-branch .sub-branch .children { gap: 5px; margin-left: 44px; align-items: flex-start; }
+
+/* Node Styles */
+.branch-node {
+  font-size: 15px; font-weight: 600;
+  padding: 10px 20px; border-radius: 8px;
+  white-space: nowrap; flex-shrink: 0; border: 2px solid;
+}
+.sub-node {
+  font-size: 13px; font-weight: 500;
+  padding: 7px 14px; border-radius: 6px;
+  white-space: nowrap; flex-shrink: 0; border: 1.5px solid;
+  background: #F8FAFC;
+}
+.leaf {
+  font-size: 12.5px; font-weight: 400; color: #475569;
+  padding: 4px 11px; background: #FAFAFA;
+  border-radius: 12px; border: 1px solid #E5E7EB;
+  white-space: nowrap; line-height: 1.5;
+}
+.leaf-desc {
+  font-size: 11.5px; color: #94A3B8; font-weight: 400; margin-left: 8px;
+}
+.leaf-desc::before { content: '\2014 '; color: #CBD5E1; }
+
+/* Color System */
+.c-blue { background: #EFF6FF; border-color: #3B82F6; color: #1E40AF; }
+.c-green { background: #F0FDF4; border-color: #10B981; color: #065F46; }
+.c-amber { background: #FFF7ED; border-color: #F59E0B; color: #92400E; }
+.c-purple { background: #F5F3FF; border-color: #8B5CF6; color: #5B21B6; }
+.c-red { background: #FEF2F2; border-color: #EF4444; color: #991B1B; }
+.c-cyan { background: #ECFEFF; border-color: #06B6D4; color: #155E75; }
+.c-teal { background: #F0FDFA; border-color: #14B8A6; color: #134E4A; }
+
+/* Sub-node inherits branch color (lighter) */
+.c-blue .sub-node { background: #F0F7FF; border-color: #93C5FD; color: #1E40AF; }
+.c-green .sub-node { background: #F2FDF6; border-color: #6EE7B7; color: #065F46; }
+.c-amber .sub-node { background: #FFF9F0; border-color: #FCD34D; color: #92400E; }
+.c-purple .sub-node { background: #F8F6FF; border-color: #C4B5FD; color: #5B21B6; }
+.c-red .sub-node { background: #FFF5F5; border-color: #FCA5A5; color: #991B1B; }
+.c-cyan .sub-node { background: #F0FEFF; border-color: #67E8F9; color: #155E75; }
+.c-teal .sub-node { background: #F2FDFA; border-color: #5EEAD4; color: #134E4A; }
+
+/* URL annotations */
+.url {
+  font-size: 11px; color: #94A3B8; font-weight: 400;
+  font-style: italic; margin-left: 6px;
+}
+</style>
+</head>
+<body>
+<div id="mindmap" data-intent="technical">
+  <div class="lr-tree">
+
+    <!-- ===== LEFT SIDE ===== -->
+    <div class="left-branches">
+
+      <!-- L1: SERVICIOS -->
+      <div class="left-branch">
+        <div class="branch-node c-blue">SERVICIOS <span class="url">/servicios/</span></div>
+        <div class="children">
+          <div class="sub-branch">
+            <div class="sub-node c-blue">Transporte de Fluidos <span class="url">/vacuum</span></div>
+            <div class="children">
+              <div class="leaf">Descripción y capacidades <span class="leaf-desc">hasta 200 bbl</span></div>
+              <div class="leaf">Tipos de fluido <span class="leaf-desc">crudo, agua, residuales</span></div>
+              <div class="leaf">Equipos y especificaciones</div>
+              <div class="leaf">Galería de imágenes</div>
+              <div class="leaf">FAQ del servicio</div>
+            </div>
+          </div>
+          <div class="sub-branch">
+            <div class="sub-node c-blue">Carga Pesada <span class="url">/carga-pesada</span></div>
+            <div class="children">
+              <div class="leaf">RIGs y maquinaria pesada</div>
+              <div class="leaf">Contenedores secos y refrigerados</div>
+              <div class="leaf">Capacidades por tonelaje</div>
+              <div class="leaf">Galería de imágenes</div>
+              <div class="leaf">FAQ del servicio</div>
+            </div>
+          </div>
+          <div class="sub-branch">
+            <div class="sub-node c-blue">Izaje y Montaje <span class="url">/izaje</span></div>
+            <div class="children">
+              <div class="leaf">Grúas hasta 120 toneladas</div>
+              <div class="leaf">Tipos de maniobra</div>
+              <div class="leaf">Proyectos realizados</div>
+              <div class="leaf">FAQ del servicio</div>
+            </div>
+          </div>
+          <div class="sub-branch">
+            <div class="sub-node c-blue">Talleres y Mantenimiento <span class="url">/talleres</span></div>
+            <div class="children">
+              <div class="leaf">Mantenimiento preventivo</div>
+              <div class="leaf">Mantenimiento correctivo</div>
+              <div class="leaf">Repuestos certificados</div>
+              <div class="leaf">Infraestructura de taller</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- L1: HOME -->
+      <div class="left-branch">
+        <div class="branch-node c-green">HOME <span class="url">/</span></div>
+        <div class="children">
+          <div class="leaf">Hero estático + CTA principal</div>
+          <div class="leaf">Barra de confianza <span class="leaf-desc">logos + certificaciones</span></div>
+          <div class="leaf">Servicios <span class="leaf-desc">3 cards con resumen</span></div>
+          <div class="leaf">Estadísticas animadas <span class="leaf-desc">contadores</span></div>
+          <div class="leaf">Proyectos destacados <span class="leaf-desc">carrusel</span></div>
+          <div class="leaf">Testimonios de clientes</div>
+          <div class="leaf">CTA cotización + WhatsApp</div>
+          <div class="leaf">Mapa de cobertura</div>
+        </div>
+      </div>
+
+      <!-- L1: INTRANET -->
+      <div class="left-branch">
+        <div class="branch-node c-amber">INTRANET <span class="url">portal.conexpet.com</span></div>
+        <div class="children">
+          <div class="sub-branch">
+            <div class="sub-node c-amber">Portal autenticado</div>
+            <div class="children">
+              <div class="leaf">Login con credenciales</div>
+              <div class="leaf">Roles y permisos</div>
+            </div>
+          </div>
+          <div class="sub-branch">
+            <div class="sub-node c-amber">RRHH</div>
+            <div class="children">
+              <div class="leaf">Compers TTHH</div>
+              <div class="leaf">Solicitud TTHH</div>
+              <div class="leaf">Encuesta médica</div>
+              <div class="leaf">Tarjeta cero</div>
+            </div>
+          </div>
+          <div class="sub-branch">
+            <div class="sub-node c-amber">Operaciones</div>
+            <div class="children">
+              <div class="leaf">JD Edwards <span class="leaf-desc">ERP</span></div>
+              <div class="leaf">Ticket de soporte</div>
+              <div class="leaf">SYSFIN <span class="leaf-desc">proveedores</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== ROOT NODE ===== -->
+    <div class="root-node">CONEXPET</div>
+
+    <!-- ===== RIGHT SIDE ===== -->
+    <div class="right-branches">
+
+      <!-- L1: LA EMPRESA -->
+      <div class="right-branch">
+        <div class="branch-node c-purple">LA EMPRESA <span class="url">/empresa/</span></div>
+        <div class="children">
+          <div class="sub-branch">
+            <div class="sub-node c-purple">Sobre Nosotros <span class="url">/sobre-nosotros</span></div>
+            <div class="children">
+              <div class="leaf">Historia y trayectoria</div>
+              <div class="leaf">Misión, Visión, Valores</div>
+              <div class="leaf">Equipo directivo</div>
+            </div>
+          </div>
+          <div class="leaf">Proyectos y Casos de Éxito <span class="url">/proyectos</span></div>
+          <div class="leaf">Clientes y Alianzas <span class="url">/clientes</span></div>
+          <div class="leaf">Certificaciones <span class="url">/certificaciones</span> <span class="leaf-desc">ISO, HSE</span></div>
+          <div class="leaf">Blog y Noticias <span class="url">/blog</span> <span class="leaf-desc">SEO + contenido</span></div>
+        </div>
+      </div>
+
+      <!-- L1: CONTACTO -->
+      <div class="right-branch">
+        <div class="branch-node c-teal">CONTACTO <span class="url">/contacto/</span></div>
+        <div class="children">
+          <div class="leaf">Formulario de cotización <span class="leaf-desc">tipo servicio, carga, ruta</span></div>
+          <div class="leaf">Ubicación y mapa <span class="leaf-desc">Lago Agrio</span></div>
+          <div class="leaf">Teléfono y WhatsApp <span class="leaf-desc">botón flotante</span></div>
+          <div class="leaf">Canal de denuncias <span class="url">/denuncias</span></div>
+        </div>
+      </div>
+
+      <!-- L1: FLOTA -->
+      <div class="right-branch">
+        <div class="branch-node c-cyan">FLOTA <span class="url">/flota/</span></div>
+        <div class="children">
+          <div class="leaf">Categorías de vehículos</div>
+          <div class="leaf">Fichas técnicas <span class="leaf-desc">specs por equipo</span></div>
+          <div class="leaf">Galería de equipos</div>
+        </div>
+      </div>
+
+      <!-- L1: STACK TECNOLÓGICO -->
+      <div class="right-branch">
+        <div class="branch-node c-red">STACK TECNOLÓGICO</div>
+        <div class="children">
+          <div class="leaf">Next.js 16 <span class="leaf-desc">React, SSR, App Router</span></div>
+          <div class="leaf">Tailwind CSS 4 <span class="leaf-desc">utilidades + diseño</span></div>
+          <div class="leaf">shadcn/ui <span class="leaf-desc">componentes accesibles</span></div>
+          <div class="leaf">Framer Motion <span class="leaf-desc">animaciones</span></div>
+          <div class="leaf">Sanity CMS <span class="leaf-desc">contenido editable</span></div>
+          <div class="leaf">Vercel <span class="leaf-desc">deploy + CDN global</span></div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+function drawAllLines() {
+  const map = document.getElementById('mindmap');
+  if (!map) { console.error('#mindmap not found'); return; }
+  const cRect = map.getBoundingClientRect();
+
+  const old = map.querySelector('svg.lines');
+  if (old) old.remove();
+
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.classList.add('lines');
+  svg.setAttribute('width', cRect.width);
+  svg.setAttribute('height', cRect.height);
+  svg.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;z-index:1;';
+  let lineCount = 0;
+
+  function rel(el) {
+    const r = el.getBoundingClientRect();
+    return {
+      cx: r.left - cRect.left + r.width/2,
+      cy: r.top - cRect.top + r.height/2,
+      left: r.left - cRect.left,
+      right: r.right - cRect.left,
+    };
+  }
+
+  function drawLine(x1, y1, x2, y2, color, width) {
+    const l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    l.setAttribute('x1', Math.round(x1)); l.setAttribute('y1', Math.round(y1));
+    l.setAttribute('x2', Math.round(x2)); l.setAttribute('y2', Math.round(y2));
+    l.setAttribute('stroke', color); l.setAttribute('stroke-width', width);
+    l.setAttribute('stroke-linecap', 'round');
+    svg.appendChild(l);
+    lineCount++;
+  }
+
+  const lineStyles = [
+    { color: '#64748B', width: 2.5 },
+    { color: '#94A3B8', width: 2 },
+    { color: '#A8B4C2', width: 1.5 },
+    { color: '#B8C2CC', width: 1.2 },
+    { color: '#CBD5E1', width: 1 },
+  ];
+  function getLineStyle(branchColor, depth) {
+    const s = lineStyles[Math.min(depth, lineStyles.length - 1)];
+    return { color: s.color, width: s.width };
+  }
+
+  function connect(parentEl, childEls, color, width, dir) {
+    if (!childEls.length) return;
+    const p = rel(parentEl);
+    const startX = dir === 'left' ? p.left : p.right;
+    const startY = p.cy;
+
+    if (childEls.length === 1) {
+      const c = rel(childEls[0]);
+      const endX = dir === 'left' ? c.right : c.left;
+      const midY = Math.round((startY + c.cy) / 2);
+      drawLine(startX, midY, endX, midY, color, width);
+      return;
+    }
+
+    let closestEdge;
+    if (dir === 'left') {
+      closestEdge = Math.max(...childEls.map(ch => rel(ch).right));
+    } else {
+      closestEdge = Math.min(...childEls.map(ch => rel(ch).left));
+    }
+    const childClearance = 16;
+    const midpoint = startX + (closestEdge - startX) / 2;
+    const midFromChild = dir === 'left' ? closestEdge + childClearance : closestEdge - childClearance;
+    const midX = dir === 'left'
+      ? Math.min(midpoint, midFromChild)
+      : Math.max(midpoint, midFromChild);
+
+    drawLine(startX, startY, midX, startY, color, width);
+
+    const allCYs = childEls.map(ch => rel(ch).cy);
+    const minY = Math.min(startY, ...allCYs);
+    const maxY = Math.max(startY, ...allCYs);
+    drawLine(midX, minY, midX, maxY, color, width);
+
+    childEls.forEach(ch => {
+      const c = rel(ch);
+      const endX = dir === 'left' ? c.right : c.left;
+      const endY = c.cy;
+      drawLine(midX, endY, endX, endY, color, width);
+    });
+  }
+
+  const NODE_SEL = '.branch-node, .sub-node, .leaf, .deep-node';
+  const CONTAINER_SEL = ':scope > .children, :scope > .leaf-group, :scope > .deep-group';
+
+  function processChildren(parentNodeEl, containerEl, branchColor, depth, dir) {
+    if (!containerEl) return;
+    const childNodeEls = [];
+    for (const wrapper of containerEl.children) {
+      const nodeEl = wrapper.matches?.(NODE_SEL) ? wrapper : wrapper.querySelector(NODE_SEL);
+      if (nodeEl) childNodeEls.push(nodeEl);
+    }
+    if (!childNodeEls.length) return;
+    const style = getLineStyle(branchColor, depth);
+    connect(parentNodeEl, childNodeEls, style.color, style.width, dir);
+
+    for (const wrapper of containerEl.children) {
+      const nodeEl = wrapper.matches?.(NODE_SEL) ? wrapper : wrapper.querySelector(NODE_SEL);
+      if (!nodeEl) continue;
+      wrapper.querySelectorAll(CONTAINER_SEL).forEach(nc =>
+        processChildren(nodeEl, nc, branchColor, depth + 1, dir)
+      );
+    }
+  }
+
+  const rootNode = map.querySelector('.root-node');
+  if (!rootNode) { console.error('.root-node not found'); return; }
+  const rp = rel(rootNode);
+
+  const leftSel = '.left-side > .branch, .left-branches > .left-branch, .left-branches > div';
+  const leftBranches = map.querySelectorAll(leftSel);
+  const leftBranchNodes = [];
+  leftBranches.forEach(branch => {
+    const bNode = branch.querySelector('.branch-node');
+    if (bNode) leftBranchNodes.push(bNode);
+  });
+  if (leftBranchNodes.length) {
+    connect(rootNode, leftBranchNodes, lineStyles[0].color, lineStyles[0].width, 'left');
+  }
+  leftBranches.forEach(branch => {
+    const bNode = branch.querySelector('.branch-node');
+    if (!bNode) return;
+    processChildren(bNode, branch.querySelector(':scope > .children'), null, 1, 'left');
+  });
+
+  const rightSel = '.right-side > .branch, .branches > .branch, .right-branches > .right-branch';
+  const rightBranches = map.querySelectorAll(rightSel);
+  const rightBranchNodes = [];
+  rightBranches.forEach(branch => {
+    const bNode = branch.querySelector('.branch-node');
+    if (bNode) rightBranchNodes.push(bNode);
+  });
+  if (rightBranchNodes.length) {
+    connect(rootNode, rightBranchNodes, lineStyles[0].color, lineStyles[0].width, 'right');
+  }
+  rightBranches.forEach(branch => {
+    const bNode = branch.querySelector('.branch-node');
+    if (!bNode) return;
+    processChildren(bNode, branch.querySelector(':scope > .children'), null, 1, 'right');
+  });
+
+  map.insertBefore(svg, map.firstChild);
+  console.log('Drew ' + lineCount + ' lines');
+}
+window.addEventListener('load', () => setTimeout(drawAllLines, 300));
+</script>
+</body>
+</html>
