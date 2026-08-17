@@ -4,6 +4,7 @@ import { useRef, useEffect, useState } from "react";
 import { gsap, ScrollTrigger } from "@/lib/gsap-register";
 import { SITE } from "@/lib/constants";
 import { Send, MessageCircle } from "lucide-react";
+import MagneticButton from "@/components/effects/MagneticButton";
 
 export default function ContactSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -116,13 +117,16 @@ export default function ContactSection() {
               placeholder="Cuéntanos sobre tu proyecto"
             />
           </div>
-          <button
-            type="submit"
-            className="mt-4 flex items-center gap-3 border border-[#DC2626] bg-[#DC2626] px-8 py-4 text-sm font-bold uppercase tracking-wider text-white transition-all hover:bg-transparent hover:text-[#DC2626]"
-          >
-            <Send className="h-4 w-4" />
-            Enviar mensaje
-          </button>
+          <MagneticButton strength={0.15}>
+            <button
+              type="submit"
+              className="mt-4 flex items-center gap-3 border border-[#DC2626] bg-[#DC2626] px-8 py-4 text-sm font-bold uppercase tracking-wider text-white transition-all hover:bg-transparent hover:text-[#DC2626]"
+              data-cursor-hover
+            >
+              <Send className="h-4 w-4" />
+              Enviar mensaje
+            </button>
+          </MagneticButton>
         </form>
 
         {/* Contact info */}

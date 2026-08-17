@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 
 const Preloader = dynamic(
@@ -20,6 +20,31 @@ const LenisProvider = dynamic(
 
 const ScrollProgress = dynamic(
   () => import("@/components/scroll/ScrollProgress"),
+  { ssr: false }
+);
+
+const CustomCursor = dynamic(
+  () => import("@/components/effects/CustomCursor"),
+  { ssr: false }
+);
+
+const ScrollDust = dynamic(
+  () => import("@/components/effects/ScrollDust"),
+  { ssr: false }
+);
+
+const WhatsAppFloat = dynamic(
+  () => import("@/components/effects/WhatsAppFloat"),
+  { ssr: false }
+);
+
+const SectionFlash = dynamic(
+  () => import("@/components/effects/SectionFlash"),
+  { ssr: false }
+);
+
+const TimeMarkers = dynamic(
+  () => import("@/components/effects/TimeMarkers"),
   { ssr: false }
 );
 
@@ -87,19 +112,26 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen bg-[#0A0A0A]">
-      {/* Preloader - covers everything */}
+      {/* Preloader */}
       {!isLoaded && <Preloader onComplete={handlePreloaderComplete} />}
 
       {/* Film grain overlay */}
       <div className="grain" aria-hidden="true" />
 
-      {/* 3D Scene - fixed behind all scroll content */}
+      {/* Premium effects (only after loaded) */}
+      {isLoaded && <CustomCursor />}
+      {isLoaded && <ScrollDust />}
+      {isLoaded && <SectionFlash />}
+      {isLoaded && <WhatsAppFloat />}
+
+      {/* 3D Scene — fixed background */}
       {isLoaded && <Scene />}
 
-      {/* Scroll progress indicator */}
+      {/* UI overlays */}
       {isLoaded && <ScrollProgress />}
+      {isLoaded && <TimeMarkers />}
 
-      {/* Main scrollable content with smooth scroll */}
+      {/* Main scrollable content */}
       {isLoaded && (
         <LenisProvider>
           <div className="relative z-10">

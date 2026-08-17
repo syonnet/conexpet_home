@@ -4,6 +4,7 @@ import { useRef, useEffect } from "react";
 import { gsap, ScrollTrigger } from "@/lib/gsap-register";
 import { SITE } from "@/lib/constants";
 import { ArrowUp } from "lucide-react";
+import MagneticButton from "@/components/effects/MagneticButton";
 
 export default function FinaleSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -88,22 +89,28 @@ export default function FinaleSection() {
           </p>
         </div>
 
-        <div ref={ctaRef} className="mt-12 opacity-0">
-          <a
-            href={`https://wa.me/${SITE.whatsapp.replace("+", "")}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block border border-[#DC2626] bg-[#DC2626] px-10 py-4 text-sm font-bold uppercase tracking-wider text-white transition-all hover:bg-transparent hover:text-[#DC2626]"
-          >
-            Cotizar ahora
-          </a>
-          <button
-            onClick={scrollToTop}
-            className="ml-6 flex h-12 w-12 items-center justify-center border border-[#1F1F1F] text-[#8A8A8A] transition-colors hover:border-[#DC2626] hover:text-[#DC2626]"
-            aria-label="Volver arriba"
-          >
-            <ArrowUp className="h-4 w-4" />
-          </button>
+        <div ref={ctaRef} className="mt-12 flex items-center justify-center gap-6 opacity-0">
+          <MagneticButton strength={0.2}>
+            <a
+              href={`https://wa.me/${SITE.whatsapp.replace("+", "")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block border border-[#DC2626] bg-[#DC2626] px-10 py-4 text-sm font-bold uppercase tracking-wider text-white transition-all hover:bg-transparent hover:text-[#DC2626]"
+              data-cursor-hover
+            >
+              Cotizar ahora
+            </a>
+          </MagneticButton>
+          <MagneticButton strength={0.3}>
+            <button
+              onClick={scrollToTop}
+              className="flex h-12 w-12 items-center justify-center border border-[#1F1F1F] text-[#8A8A8A] transition-colors hover:border-[#DC2626] hover:text-[#DC2626]"
+              aria-label="Volver arriba"
+              data-cursor-hover
+            >
+              <ArrowUp className="h-4 w-4" />
+            </button>
+          </MagneticButton>
         </div>
 
         <p className="mt-16 text-xs text-[#333333]">
