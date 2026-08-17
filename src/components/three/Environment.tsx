@@ -6,8 +6,6 @@ import * as THREE from "three";
 
 // Ground with subtle grid
 function Ground() {
-  const gridRef = useRef<THREE.Group>(null);
-
   return (
     <group>
       {/* Ground plane */}
@@ -36,8 +34,7 @@ function Ground() {
 }
 
 // Atmospheric dust particles
-function DustParticles() {
-  const count = 200;
+function DustParticles({ count }: { count: number }) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const dummy = useRef(new THREE.Object3D()).current;
 
@@ -79,7 +76,10 @@ function DustParticles() {
   );
 }
 
-export default function Environment() {
+export default function Environment({ mobile = false }: { mobile?: boolean }) {
+  const shadowSize = mobile ? 1024 : 2048;
+  const dustCount = mobile ? 60 : 200;
+
   return (
     <>
       {/* === LIGHTING === */}
@@ -89,9 +89,9 @@ export default function Environment() {
         position={[15, 10, -8]}
         intensity={3}
         color="#ff8844"
-        castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
+        castShadow={!mobile}
+        shadow-mapSize-width={shadowSize}
+        shadow-mapSize-height={shadowSize}
         shadow-camera-far={50}
         shadow-camera-left={-15}
         shadow-camera-right={15}
@@ -135,7 +135,7 @@ export default function Environment() {
       <Ground />
 
       {/* Atmospheric particles */}
-      <DustParticles />
+      <DustParticles count={dustCount} />
     </>
   );
 }

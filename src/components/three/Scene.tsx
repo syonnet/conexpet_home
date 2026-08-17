@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useRef, useMemo } from "react";
+import { Suspense, useRef, useEffect, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import Truck from "./Truck";
@@ -101,20 +101,32 @@ function Loader() {
   );
 }
 
+// Detect mobile for performance scaling
+function useIsMobile() {
+  const [mobile, setMobile] = useState(false);
+  useEffect(() => {
+    setMobile(window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent));
+  }, []);
+  return mobile;
+}
+
 export default function Scene() {
+  const mobile = useIsMobile();
+
   return (
     <Canvas
-      shadows
-      dpr={[1, 2]}
+      shadows={!mobile}
+      dpr={mobile ? [1, 1.5] : [1, 2]}
       gl={{
-        antialias: true,
+        antialias: !mobile,
         toneMapping: THREE.ACESFilmicToneMapping,
         toneMappingExposure: 0.9,
+        powerPreference: "high-performance",
       }}
       camera={{
         fov: 32,
         near: 0.1,
-        far: 100,
+        far: mobile ? 60 : 100,
         position: [12, 5, 12],
       }}
       style={{
@@ -124,10 +136,11 @@ export default function Scene() {
         width: "100%",
         height: "100%",
         zIndex: 0,
+        willChange: "transform",
       }}
     >
       <Suspense fallback={<Loader />}>
-        <Environment />
+        <Environment mobile={mobile} />
         <Truck />
         <ScrollCameraRig />
       </Suspense>

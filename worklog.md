@@ -35,3 +35,49 @@ Stage Summary:
 - Scroll progress indicator (fixed right side) shows active section
 - Zustand store bridges scroll state between 2D sections and 3D scene
 - Build: ✓ Compiled successfully
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: PASO 5 - Premium details (cursor, dust, magnetic, WhatsApp, flash)
+
+Work Log:
+- Created `src/components/effects/CustomCursor.tsx` - Red dot + ring + 5 trail particles, expands on hover, mix-blend-mode difference
+- Created `src/components/effects/ScrollDust.tsx` - Velocity-reactive dust particles (gray + red), spawn on fast scroll
+- Created `src/components/effects/MagneticButton.tsx` - Reusable magnetic hover wrapper with elastic spring-back
+- Created `src/components/effects/WhatsAppFloat.tsx` - Floating green button with pulse, delay entrance, magnetic
+- Created `src/components/effects/SectionFlash.tsx` - Red flash overlay on section change
+- Created `src/components/effects/TimeMarkers.tsx` - Left-edge section markers that reveal on scroll
+- Updated ContactSection + FinaleSection to wrap CTAs with MagneticButton + data-cursor-hover
+- Updated page.tsx to include all 6 new effects
+- Build: ✓ Compiled successfully
+
+Stage Summary:
+- 6 premium effect components created
+- Custom cursor system with trail, hover detection via MutationObserver
+- Scroll velocity drives dust particle spawning
+- Magnetic buttons on all CTAs
+- WhatsApp floating button with pulse animation
+
+---
+Task ID: 3
+Agent: Main Agent
+Task: PASO 6 - SEO + Performance + Deploy
+
+Work Log:
+- Enhanced `layout.tsx` metadata: viewport config, metadataBase, canonical URL, extended keywords, googleBot directives
+- Upgraded Schema.org from single Organization to @graph with: Organization, LocalBusiness, WebSite, 4 Service entries
+- Added preconnect hints for Google Fonts
+- Created `src/app/sitemap.ts` - Next.js auto-generated sitemap at /sitemap.xml
+- Updated `robots.txt` with sitemap reference + /api/ disallow
+- Optimized `Scene.tsx` for mobile: conditional shadows, DPR scaling, antialias toggle, powerPreference
+- Optimized `Environment.tsx`: mobile prop reduces dust particles (200→60), shadow map (2048→1024)
+- Added `aria-label` to main element, verified h1 hierarchy (only in Hero), all decorative elements have aria-hidden
+- Created production zip (142KB) at /download/conexpet_landing.zip
+- Build: ✓ Compiled successfully, sitemap.xml generated
+
+Stage Summary:
+- Full SEO: OG, Twitter Cards, Schema.org @graph (8 entities), sitemap, robots.txt
+- Mobile performance: conditional 3D rendering, reduced particles, lower DPR
+- Accessibility: heading hierarchy, aria labels, semantic roles
+- Deploy-ready zip: 142KB (download/conexpet_landing.zip)

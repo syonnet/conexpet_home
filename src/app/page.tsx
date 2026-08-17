@@ -111,7 +111,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="relative min-h-screen bg-[#0A0A0A]">
+    <main className="relative min-h-screen bg-[#0A0A0A]" role="main" aria-label="Conexpet - Logística y Transporte de Carga Pesada">
       {/* Preloader */}
       {!isLoaded && <Preloader onComplete={handlePreloaderComplete} />}
 
