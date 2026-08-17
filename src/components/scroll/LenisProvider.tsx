@@ -19,8 +19,10 @@ export default function LenisProvider({
   const updateProgress = useCallback(() => {
     if (!lenisRef.current) return;
     const lenis = lenisRef.current;
-    const scrollHeight =
-      lenis.dimensions.scroll.height - lenis.dimensions.viewport.height;
+    const vh = lenis.dimensions?.viewport?.height ?? 0;
+    const sh = lenis.dimensions?.scroll?.height ?? 0;
+    if (!vh || !sh) return;
+    const scrollHeight = sh - vh;
     const p = scrollHeight > 0 ? lenis.scroll / scrollHeight : 0;
     setProgress(Math.min(1, Math.max(0, p)));
 
